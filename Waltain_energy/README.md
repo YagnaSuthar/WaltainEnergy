@@ -65,7 +65,7 @@ Set these Vercel environment variables:
 
 | Project | Variable | Value |
 | --- | --- | --- |
-| Frontend | `API_BASE_URL` | `https://waltainenergy-frontend.vercel.app` (frontend's own origin, no trailing slash; can also be unset to use same-origin requests) |
+| Frontend | *(none required)* | Production frontend uses same-origin `/api/*` requests through its Vercel proxy |
 | Backend | `APP_ENV` | `production` |
 | Backend | `DATABASE_URL` | Production PostgreSQL connection URL; do not use SQLite |
 | Backend | `ALLOWED_ORIGINS` | `https://waltainenergy-frontend.vercel.app` (exact frontend origin, no path); add any required preview origins explicitly |
@@ -73,14 +73,14 @@ Set these Vercel environment variables:
 | Backend | `SESSION_COOKIE_SECURE` | `true` |
 | Backend | `SESSION_COOKIE_SAMESITE` | `lax` (the frontend proxies API requests through its own origin); keep `SESSION_COOKIE_SECURE=true` |
 
-For Vercel, the frontend sends `/api/*` requests to its own domain and Vercel
-proxies them to the backend. This keeps the HttpOnly chat cookie first-party;
-direct browser requests from one Vercel project domain to another can have
-their cookies blocked by mobile browsers. Do not set `API_BASE_URL` to the
-backend domain. Set it to the frontend origin shown above or leave it unset
-(same-origin default). Redeploy the frontend after changing its environment.
-The backend must allow the frontend origin above; redeploy it after changing
-CORS or cookie settings.
+For Vercel, the frontend always sends `/api/*` requests to its own domain and
+Vercel proxies them to the backend. This keeps the HttpOnly chat cookie
+first-party; direct browser requests from one Vercel project domain to another
+can have their cookies blocked by mobile browsers. `API_BASE_URL` is used only
+for local development and is ignored in production, even if an old Vercel
+environment value remains set. Redeploy the frontend after this change. The
+backend must allow the frontend origin above; redeploy it after changing CORS
+or cookie settings.
 
 For non-FAQ chatbot replies, also set backend `LLM_PROVIDER`, `LLM_API_KEY`,
 and `LLM_MODEL` to a supported provider and model. Without an LLM key, the

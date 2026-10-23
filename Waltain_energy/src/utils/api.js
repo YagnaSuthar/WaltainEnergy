@@ -1,5 +1,4 @@
-const configuredApiBase = import.meta.env.API_BASE_URL
-  || (import.meta.env.DEV ? 'http://localhost:8000' : '')
+const configuredApiBase = import.meta.env.API_BASE_URL || ''
 
 export const API_BASE_URL = configuredApiBase.replace(/\/$/, '')
 
