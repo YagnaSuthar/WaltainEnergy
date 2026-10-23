@@ -1,0 +1,46 @@
+Waltain Backend Architecture
+
+
+backend/
+├── app/
+│   ├── __init__.py
+│   ├── main.py                    # FastAPI app factory with lifespan
+│   ├── lifespan.py                # Startup/shutdown events
+│   ├── core/
+│   │   ├── config.py              # pydantic-settings config
+│   │   ├── logging.py             # Structured logging
+│   │   ├── security.py            # Token/session helpers
+│   │   ├── exceptions.py          # Custom exceptions + handlers
+│   │   ├── middleware.py          # CORS, request ID, rate-limit
+│   │   └── constants.py           # Enums and constants
+│   ├── api/
+│   │   ├── router.py              # Root API router
+│   │   ├── dependencies.py        # FastAPI deps
+│   │   └── v1/
+│   │       ├── router.py          # v1 sub-router
+│   │       └── endpoints/         # health, site_config, chat, leads, contact, estimates, admin
+│   ├── agents/
+│   │   ├── orchestrator.py        # Main chat orchestrator
+│   │   ├── graph.py               # LangGraph agent graph
+│   │   ├── state.py               # Typed agent state
+│   │   ├── prompts.py             # System prompts
+│   │   ├── intent_classifier.py
+│   │   ├── context_builder.py
+│   │   ├── response_generator.py
+│   │   ├── memory/                # In-memory + Redis session stores
+│   │   └── tools/                 # 10 agent tools
+│   ├── schemas/                   # Pydantic request/response models
+│   ├── models/                    # SQLAlchemy ORM models
+│   ├── repositories/              # Data access layer
+│   ├── services/                  # Business logic layer
+│   ├── db/                        # Engine, session, migrations
+│   ├── workers/                   # Email background worker
+│   └── utils/                     # IDs, sanitization, time
+├── tests/                         # unit, integration, security
+├── scripts/                       # seed_business.py, create_initial_admin.py
+├── alembic/                       # Migrations
+├── alembic.ini
+├── pyproject.toml / requirements.txt
+├── Dockerfile, railway.json
+├── .env.example
+└── README.md

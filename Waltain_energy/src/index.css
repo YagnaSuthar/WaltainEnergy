@@ -1,0 +1,182 @@
+/* ========== ULTRA SMOOTH SCROLLING UTILITIES ========== */
+
+/* BROWSER HARDWARE ACCELERATION */
+html,
+body,
+#root {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Enhanced scrollbar styling with smooth transitions */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 6px;
+  transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Smooth scroll utility classes */
+.scroll-smooth {
+  scroll-behavior: smooth;
+  -webkit-scroll-behavior: smooth;
+}
+
+.scroll-auto {
+  scroll-behavior: auto;
+}
+
+/* EXTREME SMOOTH SCROLL PERFORMANCE */
+html {
+  scroll-padding-top: 80px;
+  scroll-padding-bottom: 20px;
+  /* Momentum scrolling for iOS */
+  -webkit-overflow-scrolling: touch;
+  /* Smooth animation easing curve */
+  --scroll-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* Enable scroll-driven animations */
+  scroll-timeline: auto;
+  /* Smooth scroll-triggered animations */
+  view-timeline-name: --scroll;
+}
+
+/* Apply scroll margin & snap alignment to all elements */
+* {
+  scroll-margin: 80px 0 0 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: auto;
+}
+
+/* ULTRA-ANTIALIASING for ultra-smooth rendering */
+*,
+*::before,
+*::after {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  /* Reduce jank during scroll */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+/* Smooth scroll easing animations */
+@supports (scroll-behavior: smooth) {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  * {
+    scroll-behavior: smooth;
+  }
+}
+
+/* GPU ACCELERATED HARDWARE RENDERING */
+main,
+section,
+article,
+nav {
+  will-change: auto;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Enable 3D rendering on GPU */
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
+  /* Better scroll paint performance */
+  contain: layout style paint;
+  /* Reduce paint operations */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Optimize containers for ultra-smooth scrolling */
+.container,
+main,
+section,
+article {
+  will-change: scroll-position;
+  /* Enable 3D rendering */
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
+  /* Smooth transitions */
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Prevent layout shift during scrolling */
+body {
+  overflow-x: hidden;
+}
+
+/* Smooth scroll-driven animations */
+@supports (animation-timeline: view()) {
+  section,
+  article {
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+}
+
+/* Enable frame rate optimization */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Smooth transitions for interactive elements */
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* PERFORMANCE: Disable pointer events during scroll */
+body.is-scrolling {
+  pointer-events: none;
+}
+
+/* Smooth scroll restoration */
+html {
+  scroll-behavior: smooth;
+  -webkit-scroll-behavior: smooth;
+}
+
+/* Optimize rendering performance */
+main,
+section,
+article,
+nav,
+header,
+footer {
+  contain: layout style paint content;
+  content-visibility: auto;
+}
+
+/* Ultra-smooth box shadows and transforms */
+* {
+  box-shadow: none;
+}
+
+/* Reduce paint during animations */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    animation-duration: 0.3s;
+    animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+}
