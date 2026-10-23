@@ -10,3 +10,4 @@ from app.models.lead import Lead  # noqa: F401
 from app.models.contact_submission import ContactSubmission  # noqa: F401
 from app.models.email_outbox import EmailOutbox  # noqa: F401
 from app.models.audit_event import AuditEvent  # noqa: F401
+from app.models.traffic_event import TrafficEvent  # noqa: F401

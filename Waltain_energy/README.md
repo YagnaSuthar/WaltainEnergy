@@ -31,8 +31,8 @@ npm run lint
 
 ## Chat and Contact Form
 
-The floating assistant and Contact Us form call the FastAPI backend using
-`VITE_API_BASE_URL`. The frontend calls `/api/v1/chat/sessions`,
+The floating assistant and Contact Us form call the FastAPI backend using the
+build-time `API_BASE_URL` setting. The frontend calls `/api/v1/chat/sessions`,
 `/api/v1/chat/messages`, `/api/v1/chat/lead-submissions`, and
 `/api/v1/contact`; the backend mounts these routes under its configured
 `API_PREFIX` (default `/api/v1`). For local development, create
@@ -64,13 +64,19 @@ Set these Vercel environment variables:
 
 | Project | Variable | Value |
 | --- | --- | --- |
-| Frontend | `VITE_API_BASE_URL` | Backend's public HTTPS base URL, with no trailing slash (for example `https://api.example.com`) |
+| Frontend | `API_BASE_URL` | `https://waltain-energy.vercel.app` (backend public URL, no trailing slash) |
 | Backend | `APP_ENV` | `production` |
 | Backend | `DATABASE_URL` | Production PostgreSQL connection URL; do not use SQLite |
-| Backend | `ALLOWED_ORIGINS` | Exact frontend origin, such as `https://demo.example.com` (no path); add any required preview origins explicitly |
+| Backend | `ALLOWED_ORIGINS` | `https://waltainenergy-frontend.vercel.app` (exact frontend origin, no path); add any required preview origins explicitly |
 | Backend | `SESSION_TOKEN_SECRET` | A unique, randomly generated secret; never use the development default |
 | Backend | `SESSION_COOKIE_SECURE` | `true` |
-| Backend | `SESSION_COOKIE_SAMESITE` | `lax` for frontend/API on the same site; use `none` only when they are on different sites, and keep `SESSION_COOKIE_SECURE=true` |
+| Backend | `SESSION_COOKIE_SAMESITE` | `none` for these separate Vercel project domains; keep `SESSION_COOKIE_SECURE=true` |
+
+The frontend's `vite.config.js` explicitly loads `API_BASE_URL` from Vercel's
+build environment and embeds only that URL into the browser bundle. After
+adding or changing the variable, redeploy the frontend so the new value is
+included in its build. The backend must allow the exact frontend origin above;
+restart/redeploy it after changing CORS or cookie settings.
 
 For non-FAQ chatbot replies, also set backend `LLM_PROVIDER`, `LLM_API_KEY`,
 and `LLM_MODEL` to a supported provider and model. Without an LLM key, the
@@ -87,11 +93,27 @@ The first two addresses are emphasized on the Contact page, footer, and emails.
 Update this value in the backend's Vercel environment settings and redeploy for
 the public links and chatbot replies to use the new addresses.
 
+Anonymous website analytics records daily page views and unique browser
+visitors, chatbot opens and messages, and successful contact-form submissions.
+It stores only a hash of a random first-party visitor cookie, event type, and
+page path; it does not store IP addresses, chat content, or form contents.
+Analytics totals are not exposed through the frontend or a public reporting
+API. After deploying the `traffic_events` migration, run the backend checker
+from `backend/`:
+
+```powershell
+python traffic_report.py
+python traffic_report.py 2026-10-23
+```
+
+The report date uses `BUSINESS_TIMEZONE` (default `Asia/Kolkata`).
+
 Use a stable frontend domain and an API subdomain under the same site where
 possible (for example `demo.example.com` and `api.example.com`), then use the
 frontend origin verbatim in `ALLOWED_ORIGINS`. The app sends credentialed
-requests so the backend session cookie works across the two origins. Do not
-put backend secrets in frontend `VITE_*` variables.
+requests so the backend session cookie works across the two origins. `API_BASE_URL`
+is a public API address embedded at build time, not a secret; never put backend
+credentials or other secrets in frontend build variables.
 
 If using the default Vercel domains for separate projects, set
 `SESSION_COOKIE_SAMESITE=none` and `SESSION_COOKIE_SECURE=true`; some browsers

@@ -10,7 +10,7 @@ import {
   X,
 } from 'lucide-react'
 
-import { apiRequest } from '../utils/api.js'
+import { apiRequest, trackEvent } from '../utils/api.js'
 import { faq } from '../data/content.js'
 import assistantPortrait from '../assets/chatbot/assistant-portrait.png'
 import whatsappIcon from '../assets/chatbot/whatsapp-icon.png'
@@ -289,6 +289,7 @@ export default function ChatWidget() {
   async function sendMessage(message = draft, trustedFaqAnswer = null) {
     const text = message.trim()
     if (!text || isSending) return
+    trackEvent('chat_message')
 
     const visitorMessageCount = messages.filter((item) => item.role === 'user').length + 1
     const shouldOfferLeadForm = isLeadFormRequest(text)
@@ -437,6 +438,7 @@ export default function ChatWidget() {
 
   function toggleChat() {
     setShowChatPrompt(false)
+    if (!isOpen) trackEvent('chat_open')
     setIsOpen((current) => !current)
   }
 

@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
@@ -18,12 +18,18 @@ import FAQ from './pages/FAQ.jsx'
 import Contact from './pages/Contact.jsx'
 import Partnerships from './pages/Partnerships.jsx'
 import BESS from './pages/BESS.jsx'
+import { trackEvent } from './utils/api.js'
 
 function ScrollToTopOnRouteChange() {
   const location = useLocation()
+  const trackedPath = useRef('')
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    if (trackedPath.current !== location.pathname) {
+      trackedPath.current = location.pathname
+      trackEvent('page_view', location.pathname)
+    }
   }, [location.pathname])
 
   return null

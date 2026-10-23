@@ -1,4 +1,4 @@
-const configuredApiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+const configuredApiBase = import.meta.env.API_BASE_URL || 'http://localhost:8000'
 
 export const API_BASE_URL = configuredApiBase.replace(/\/$/, '')
 
@@ -33,4 +33,13 @@ export async function apiRequest(path, options = {}) {
     throw new Error(getErrorMessage(payload))
   }
   return payload
+}
+
+export function trackEvent(eventType, pagePath = window.location.pathname) {
+  apiRequest('/api/v1/traffic/events', {
+    method: 'POST',
+    body: JSON.stringify({ event_type: eventType, page_path: pagePath }),
+  }).catch((error) => {
+    console.warn('Website analytics event could not be recorded.', error)
+  })
 }

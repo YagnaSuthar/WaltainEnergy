@@ -6,7 +6,7 @@ import '../styles/pages/contact.css'
 import PageHeader from '../components/PageHeader.jsx'
 import Section from '../components/Section.jsx'
 import { company } from '../data/content.js'
-import { apiRequest } from '../utils/api.js'
+import { apiRequest, trackEvent } from '../utils/api.js'
 
 import houseImage from '../assets/images/house.png'
 
@@ -61,6 +61,7 @@ export default function Contact() {
         }),
       })
       setResult({ message: response.message, notificationSent: response.notification_sent })
+      trackEvent('contact_form_submit')
       setForm(initialForm)
     } catch (requestError) {
       setError(requestError.message || 'Your message could not be sent. Please try again.')
