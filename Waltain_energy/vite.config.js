@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     define: {
       'import.meta.env.API_BASE_URL': JSON.stringify(
-        env.API_BASE_URL || 'http://localhost:8000',
+        env.API_BASE_URL || (mode === 'development' ? 'http://localhost:8000' : ''),
       ),
     },
   }

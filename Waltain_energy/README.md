@@ -45,8 +45,9 @@ frontend.
 Deploy the frontend and backend as separate Vercel projects:
 
 1. The frontend's current Git repository root is `Waltain_energy/`, so select
-   `./` as its Vercel Root Directory. Its existing `vercel.json` builds the
-   Vite site and rewrites client-side routes to `index.html`.
+   `./` as its Vercel Root Directory. Its `vercel.json` builds the Vite site,
+   proxies `/api/*` requests to the backend, and rewrites client-side routes to
+   `index.html`.
 2. The backend project's Root Directory must contain the backend source,
    `requirements.txt`, `vercel.json`, and `api/index.py`. Select `./` if the
    backend is its own repository, or `backend` if both projects are placed in
@@ -64,19 +65,22 @@ Set these Vercel environment variables:
 
 | Project | Variable | Value |
 | --- | --- | --- |
-| Frontend | `API_BASE_URL` | `https://waltain-energy.vercel.app` (backend public URL, no trailing slash) |
+| Frontend | `API_BASE_URL` | `https://waltainenergy-frontend.vercel.app` (frontend's own origin, no trailing slash; can also be unset to use same-origin requests) |
 | Backend | `APP_ENV` | `production` |
 | Backend | `DATABASE_URL` | Production PostgreSQL connection URL; do not use SQLite |
 | Backend | `ALLOWED_ORIGINS` | `https://waltainenergy-frontend.vercel.app` (exact frontend origin, no path); add any required preview origins explicitly |
 | Backend | `SESSION_TOKEN_SECRET` | A unique, randomly generated secret; never use the development default |
 | Backend | `SESSION_COOKIE_SECURE` | `true` |
-| Backend | `SESSION_COOKIE_SAMESITE` | `none` for these separate Vercel project domains; keep `SESSION_COOKIE_SECURE=true` |
+| Backend | `SESSION_COOKIE_SAMESITE` | `lax` (the frontend proxies API requests through its own origin); keep `SESSION_COOKIE_SECURE=true` |
 
-The frontend's `vite.config.js` explicitly loads `API_BASE_URL` from Vercel's
-build environment and embeds only that URL into the browser bundle. After
-adding or changing the variable, redeploy the frontend so the new value is
-included in its build. The backend must allow the exact frontend origin above;
-restart/redeploy it after changing CORS or cookie settings.
+For Vercel, the frontend sends `/api/*` requests to its own domain and Vercel
+proxies them to the backend. This keeps the HttpOnly chat cookie first-party;
+direct browser requests from one Vercel project domain to another can have
+their cookies blocked by mobile browsers. Do not set `API_BASE_URL` to the
+backend domain. Set it to the frontend origin shown above or leave it unset
+(same-origin default). Redeploy the frontend after changing its environment.
+The backend must allow the frontend origin above; redeploy it after changing
+CORS or cookie settings.
 
 For non-FAQ chatbot replies, also set backend `LLM_PROVIDER`, `LLM_API_KEY`,
 and `LLM_MODEL` to a supported provider and model. Without an LLM key, the
