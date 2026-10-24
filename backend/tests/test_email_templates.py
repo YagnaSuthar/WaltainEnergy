@@ -47,7 +47,7 @@ async def test_contact_notification_has_branded_layout_and_logo(monkeypatch) -> 
         email_from_name="Waltain Energy",
         email_from_address="sender@example.com",
         email_reply_to_enabled=True,
-        business_notification_email="yagna.suthar@gmail.com",
+        business_notification_email="mailus@waltainenergy.com",
         business_public_email=(
             "jalpan@waltainenergy.com,mailus@waltainenergy.com,"
             "connect.waltainenergy@gmail.com"
@@ -66,7 +66,7 @@ async def test_contact_notification_has_branded_layout_and_logo(monkeypatch) -> 
     await send_contact_notification(settings, payload)
 
     message = sent_messages[0]
-    assert message["To"] == "yagna.suthar@gmail.com"
+    assert message["To"] == "mailus@waltainenergy.com"
     assert message["Reply-To"] == "visitor@example.com"
     html = message.get_body(preferencelist=("html",)).get_content()
     assert "New website inquiry" in html
